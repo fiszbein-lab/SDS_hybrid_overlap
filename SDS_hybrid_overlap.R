@@ -2,17 +2,17 @@ library(tidyverse)
 # Read in SDS
 gd <- read.delim('nterm-altTSS-counts-table-SDS.tsv')
 
-# Read in gtf file with exon-level info on exon classification and hybrid status
-# gtf contains pairs of transcripts (subsequent rows) from a gene where one transcript uses a hybrid exon as a first exon and one transcript uses a hybrid exon as an internal exon
-# Information included along with standard gtf info for each pair includes:
-### one, both, or neither are protein coding
-### protein code for each transcript
-### alignment score
-hdf <- read.csv('HFE_DF_withInfo.txt')
 
-# extract transcript names and create column in gtf
-tn <- unlist(lapply(strsplit(unlist(lapply(strsplit(hdf$V9, split = ';'), "[[", 6)), split = " "), "[[", 3))
-hdf$transcript_name <- tn
+# HFE_DF.csv
+# File details every possible annotated hybrid exon usage swap from first to internal
+
+# Pairs of rows contain:
+# (top row): details about the transcript which uses the exon as a first followed by 
+# (bottom row): details about the transcript which uses the exon as an internal
+
+# Only the transcript names from the pairs are used for this file, looking for overlap with a set of SDS 
+hdf <- read.csv('HFE_DF.csv')
+
 
 m_l <- c(paste(hdf$transcript_name[seq(1, (length(hdf$transcript_name)-1), by=2)], ';',  hdf$transcript_name[seq(2, (length(hdf$transcript_name)), by=2)], sep = ""),
          paste(hdf$transcript_name[seq(2, (length(hdf$transcript_name)), by=2)], ';',  hdf$transcript_name[seq(1, (length(hdf$transcript_name)-1), by=2)], sep = ""))
